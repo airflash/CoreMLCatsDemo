@@ -49,7 +49,8 @@ class ViewController: UIViewController {
             }
 
             let classificationRequest = VNCoreMLRequest(model: visionModel, completionHandler: handleClassifications)
-            classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOptionCenterCrop
+            classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOption.centerCrop
+            
             visionRequests = [classificationRequest]
         } catch {
             let alertController = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
@@ -73,11 +74,11 @@ class ViewController: UIViewController {
             return
         }
 
-        var resultString = "Это не кот!"
+        var resultString = "Это не Кекс!"
         results[0...3].forEach {
             let identifer = $0.identifier.lowercased()
-            if identifer.range(of: " cat") != nil || identifer.range(of: "cat ") != nil || identifer == "cat" {
-                resifultString = "Это кот!"
+            if identifer.range(of: " dog") != nil || identifer.range(of: "dog ") != nil || identifer == "dog" {
+                resultString = "Это Кекс!"
             }
         }
         DispatchQueue.main.async {
@@ -100,7 +101,8 @@ extension ViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
             requestOptions = [.cameraIntrinsics: cameraIntrinsicData]
         }
 
-        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: 1, options: requestOptions)
+        
+        let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: CGImagePropertyOrientation.up, options: requestOptions)
         do {
             try imageRequestHandler.perform(visionRequests)
         } catch {
